@@ -2,5 +2,9 @@
     "python.autoComplete.extraPaths": [
         "/media/josefajardo/Data/ROS_WS/moveit_ws/devel/lib/python3/dist-packages",
         "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/media/josefajardo/Data/ROS_WS/moveit_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
     ]
 }
