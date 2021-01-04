@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>ros_braccio_urdf</name>
+  <name>braccio_manipulator</name>
   <version>0.0.1</version>
-  <description>The ros_braccio_urdf package</description>
+  <description>The braccio_manipulator package</description>
 
   <maintainer email="jmfajardod@gmail.com">Jose Fajardo</maintainer>
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(ros_braccio_urdf)
+project(braccio_manipulator)
 
 find_package(catkin REQUIRED)
 catkin_package()

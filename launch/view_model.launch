@@ -1,21 +1,20 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="model" default="$(find ros_braccio_urdf)/urdf/braccio_arm.urdf"/>
 
-    <arg name="gui" default="true"/>
-    <arg name="rvizconfig" default="$(find ros_braccio_urdf)/rviz/urdf.rviz" />
+    <!-- Load path to model -->
+    <arg name="robot_xacro" value="$(find braccio_manipulator)/urdf/braccio_arm.urdf"/>
 
-    <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)"/>
-    <param name="use_gui" value="gui"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg robot_xacro)"/>
+
+    <!-- State publisher -->
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
         <param name="publish_frequency" type="double" value="30.0"/>
     </node>
 
-    <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_pub" >
-        <param name="use_gui" value="true"/>
-    </node>
-    
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+    <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_pub" />
+
+    <!-- RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find braccio_manipulator)/rviz/urdf.rviz"/>
 
 </launch>
