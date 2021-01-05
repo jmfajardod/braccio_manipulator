@@ -10,6 +10,8 @@
 #include <Servo.h> 
 #include <ros.h>
 #include <std_msgs/UInt16MultiArray.h>
+#include <braccio_manipulator/JtStates.h>
+#include <std_srvs/Trigger.h>
 
 ros::NodeHandle  nh;
 
@@ -41,8 +43,6 @@ bool Motors_ON = false;
 
 
 // Declare subscribers
-
-
 void servo_cb( const std_msgs::UInt16MultiArray& cmd_msg){
   
   goal_m_1   = cmd_msg.data[0];
@@ -62,7 +62,35 @@ void servo_cb( const std_msgs::UInt16MultiArray& cmd_msg){
 }
 ros::Subscriber<std_msgs::UInt16MultiArray> sub("servo_cmd", servo_cb);
 
+// Declare services
+void getJointStatesCB(const braccio_manipulator::JtStates::Request & req, braccio_manipulator::JtStates::Response & res)
+{
+  res.res_length=6;
+  
+  sensingPosition();
+  
+  res.res[0]=angle1;
+  res.res[1]=angle2;
+  res.res[2]=angle3;
+  res.res[3]=angle4;
+  res.res[4]=angle5;
+  res.res[5]=angle6;  
+
+  return;
+  
+}
+ros::ServiceServer<braccio_manipulator::JtStates::Request, braccio_manipulator::JtStates::Response> serverJtStates("/read_joint_state",&getJointStatesCB);
+
 void setup(){
+
+  // Init node and subscribers
+  nh.initNode();
+  nh.subscribe(sub);
+  nh.advertiseService(serverJtStates);
+
+  delay(500);
+
+  nh.loginfo("Begin Calibration");
   
   // Select pin 12 as output    
   pinMode(12,OUTPUT);
@@ -117,9 +145,7 @@ void setup(){
   vel_m_5    = 30;
   vel_m_6    = 10;
 
-  // Init node and subscribers
-  nh.initNode();
-  nh.subscribe(sub);
+  nh.loginfo("End Calibration");
   
 }
 /***************************************************************************/
@@ -439,7 +465,7 @@ void sensingPosition(){
 void loop() {
 
   nh.spinOnce();
-  delay(1);
+  delay(250);
   
 }
 /***************************************************************************/
