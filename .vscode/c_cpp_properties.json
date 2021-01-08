@@ -6,8 +6,9 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "includePath": [
-                "/media/josefajardo/Data/ROS_WS/moveit_ws/devel/include/**",
                 "/opt/ros/noetic/include/**",
+                "/media/josefajardo/Data/ROS_WS/moveit_ws/devel/include/**",
+                "/media/josefajardo/Data/ROS_WS/moveit_ws/src/braccio_manipulator/include/**",
                 "/media/josefajardo/Data/ROS_WS/moveit_ws/src/3-DOF_Manipulator/three_dof_planar_manipulator/include/**",
                 "/media/josefajardo/Data/ROS_WS/moveit_ws/src/3-DOF_Manipulator/three_dof_planar_manipulator_ikfast_arm_plugin/include/**",
                 "/usr/include/**"

@@ -10,7 +10,8 @@
 #include <Servo.h> 
 #include <ros.h>
 #include <std_msgs/UInt16MultiArray.h>
-#include <sensor_msgs/JointState.h>
+#include <braccio_manipulator/JtStates.h>
+#include <std_srvs/Trigger.h>
 
 ros::NodeHandle  nh;
 
@@ -25,7 +26,6 @@ Servo wrist_ver5;
 Servo gripper6;
 
 // Variables for control and sensing of the motors
-float joint_position[6];
 float angle1, angle2, angle3, angle4, angle5, angle6; 
 float val_m_1, val_m_2, val_m_3, val_m_4, val_m_5, val_m_6; 
 float goal_m_1, goal_m_2, goal_m_3, goal_m_4, goal_m_5, goal_m_6;
@@ -41,8 +41,6 @@ float Period = 1/Frequency;
 // Variable to enable or disable the motors
 bool Motors_ON = false;
 
-// -------------------------------------------------------------------------------------------------------//
-// -------------------------------------------------------------------------------------------------------//
 
 // Declare subscribers
 void servo_cb( const std_msgs::UInt16MultiArray& cmd_msg){
@@ -64,37 +62,26 @@ void servo_cb( const std_msgs::UInt16MultiArray& cmd_msg){
 }
 ros::Subscriber<std_msgs::UInt16MultiArray> sub("servo_cmd", servo_cb);
 
-// Declare publisher
-sensor_msgs::JointState joint_states_msg;
-ros::Publisher jt_st_pub("braccio_states", &joint_states_msg);
+// Declare services
+void getJointStatesCB(const braccio_manipulator::JtStates::Request & req, braccio_manipulator::JtStates::Response & res)
+{
+  res.res_length=2;
+  
+  sensingPosition();
+  
+  res.res[0]=angle1;
+  res.res[1]=angle2;
+  //res.res[2]=angle3;
+  //res.res[3]=angle4;
+  //res.res[4]=angle5;
+  //res.res[5]=angle6;  
 
-// -------------------------------------------------------------------------------------------------------//
-// -------------------------------------------------------------------------------------------------------//
-
-//char *joint_names[] = {"base_joint", "shoulder_joint", "elbow_joint", "wrist_pitch_joint", "wrist_roll_joint", "base_joint"};
-char *joint_names[] = {"J1","J2","J3","J4","J5","J6"};
-char frame_id[11] = "/base_link";
-float zeros[6] = {0,0,0,0,0,0};
+  return;
+  
+}
+ros::ServiceServer<braccio_manipulator::JtStates::Request, braccio_manipulator::JtStates::Response> serverJtStates("/read_joint_state",&getJointStatesCB);
 
 void setup(){
-
-  joint_states_msg.header.frame_id = frame_id;
-  
-  joint_states_msg.name_length = 6 ;
-  joint_states_msg.position_length = 6;
-  joint_states_msg.velocity_length = 0;
-  joint_states_msg.effort_length = 0;
-
-  // Initialize Sensor values
-  joint_position[0] = 0;
-  joint_position[1] = 0;
-  joint_position[2] = 0;
-  joint_position[3] = 0;
-  joint_position[4] = 0;
-  joint_position[5] = 0;
-
-  joint_states_msg.name = joint_names;
-  joint_states_msg.position = joint_position;
   
   // Select pin 12 as output    
   pinMode(12,OUTPUT);
@@ -108,13 +95,13 @@ void setup(){
   wrist_ver5.attach(5,500,1888); // Define different PWM limits 500 low and 1888 high
   gripper6.attach(3,500,1888);
 
-  // Init angles
-  angle1 = 90.0;
-  angle2 = 90.0;
-  angle3 = 90.0;
-  angle4 = 90.0;
-  angle5 = 90.0;
-  angle6 = 90.0;
+  // Initialize Sensor values
+  angle1 = 0;
+  angle2 = 0;
+  angle3 = 0;
+  angle4 = 0;
+  angle5 = 0;
+  angle6 = 0;
 
   // Init Motors
   init_Motors();
@@ -147,13 +134,13 @@ void setup(){
   vel_m_3    = 30;
   vel_m_4    = 30;
   vel_m_5    = 30;
-  vel_m_6    = 30;
+  vel_m_6    = 10;
 
-  // Init node, subscribers, and publishers
+  // Init node and subscribers
   nh.getHardware()->setBaud(500000);
   nh.initNode();
   nh.subscribe(sub);
-  nh.advertise(jt_st_pub);
+  nh.advertiseService(serverJtStates);
 
   delay(500);
 
@@ -360,7 +347,7 @@ void go_Home(){
     continue;
   }
   
-  delay(500);
+  delay(100);
 }
 /***************************************************************************/
 /***************************************************************************/
@@ -453,12 +440,12 @@ void sensingPosition(){
     angle6 = ( float(sensor_6) - 201) * (90.0/(121.0-201.0)); 
 
     // Estimate the angle using the sensor and the command
-    angle1 = 0.1*angle1 + 0.9*float(val_m_1); // 0.35 0.65
-    angle2 = 0.1*angle2 + 0.9*float(val_m_2); // 0.25 0.75
-    angle3 = 0.1*angle3 + 0.9*float(val_m_3); // 0.35 0.65
-    angle4 = 0.1*angle4 + 0.9*float(val_m_4); // 0.35 0.65
-    angle5 = 0.1*angle5 + 0.9*float(val_m_5); // 0.35 0.65 
-    angle6 = 0.1*angle6 + 0.9*float(val_m_6); // 0.35 0.65
+    angle1 = 0.35*angle1 + 0.65*float(val_m_1);
+    angle2 = 0.25*angle2 + 0.75*float(val_m_2);
+    angle3 = 0.35*angle3 + 0.65*float(val_m_3);
+    angle4 = 0.35*angle4 + 0.65*float(val_m_4);
+    angle5 = 0.35*angle5 + 0.65*float(val_m_5);
+    angle6 = 0.35*angle6 + 0.65*float(val_m_6);
   }
   else{
     
@@ -476,18 +463,8 @@ void sensingPosition(){
 /***************************************************************************/
 void loop() {
 
-  //joint_states_msg.header.stamp = nh.now();
-  sensingPosition();
-  joint_position[0] = angle1;
-  joint_position[1] = angle2;
-  joint_position[2] = angle3;
-  joint_position[3] = angle4;
-  joint_position[4] = angle5;
-  joint_position[5] = angle6;
-  jt_st_pub.publish( &joint_states_msg );
-  
   nh.spinOnce();
-  delay(100);
+  delay(10);
   
 }
 /***************************************************************************/
