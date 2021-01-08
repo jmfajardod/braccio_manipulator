@@ -453,12 +453,12 @@ void sensingPosition(){
     angle6 = ( float(sensor_6) - 201) * (90.0/(121.0-201.0)); 
 
     // Estimate the angle using the sensor and the command
-    angle1 = 0.1*angle1 + 0.9*float(val_m_1); // 0.35 0.65
-    angle2 = 0.1*angle2 + 0.9*float(val_m_2); // 0.25 0.75
-    angle3 = 0.1*angle3 + 0.9*float(val_m_3); // 0.35 0.65
-    angle4 = 0.1*angle4 + 0.9*float(val_m_4); // 0.35 0.65
-    angle5 = 0.1*angle5 + 0.9*float(val_m_5); // 0.35 0.65 
-    angle6 = 0.1*angle6 + 0.9*float(val_m_6); // 0.35 0.65
+    angle1 = 0.0*angle1 + 1.0*float(val_m_1); // 0.35 0.65
+    angle2 = 0.0*angle2 + 1.0*float(val_m_2); // 0.25 0.75
+    angle3 = 0.0*angle3 + 1.0*float(val_m_3); // 0.35 0.65
+    angle4 = 0.0*angle4 + 1.0*float(val_m_4); // 0.35 0.65
+    angle5 = 0.0*angle5 + 1.0*float(val_m_5); // 0.35 0.65 
+    angle6 = 0.0*angle6 + 1.0*float(val_m_6); // 0.35 0.65
   }
   else{
     

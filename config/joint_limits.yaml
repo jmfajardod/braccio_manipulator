@@ -1,0 +1,37 @@
+joint_limits:
+  base_joint:
+    has_position_limits: true
+    min_position: rad(-pi/2)
+    max_position: rad(pi/2)
+    has_velocity_limits: true
+    max_velocity: 2.0
+  shoulder_joint:
+    has_position_limits: true
+    min_position: rad(-5*pi/12)
+    max_position: rad(5*pi/12)
+    has_velocity_limits: true
+    max_velocity: 2.0
+  elbow_joint:
+    has_position_limits: true
+    min_position: rad(-pi/2)
+    max_position: rad(pi/2)
+    has_velocity_limits: true
+    max_velocity: 2.0
+  wrist_pitch_joint:
+    has_position_limits: true
+    min_position: rad(-pi/2)
+    max_position: rad(pi/2)
+    has_velocity_limits: true
+    max_velocity: 2.0
+  wrist_roll_joint:
+    has_position_limits: true
+    min_position: rad(-pi/2)
+    max_position: rad(35*pi/180)
+    has_velocity_limits: true
+    max_velocity: 2.0
+  gripper_joint:
+    has_position_limits: true
+    min_position: rad(70*pi/180)
+    max_position: rad(pi/2)
+    has_velocity_limits: true
+    max_velocity: 2.0

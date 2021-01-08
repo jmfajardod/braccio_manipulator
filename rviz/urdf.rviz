@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /RobotModel1
-        - /RobotModel1/Links1
         - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.5
@@ -115,13 +114,13 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: false
+        All Enabled: true
         base_link:
-          Value: false
+          Value: true
         braccio_base_link:
-          Value: false
+          Value: true
         elbow_link:
-          Value: false
+          Value: true
         left_gripper_link:
           Value: true
         right_gripper_link:
@@ -129,15 +128,15 @@ Visualization Manager:
         shoulder_link:
           Value: true
         wrist_pitch_link:
-          Value: false
+          Value: true
         wrist_roll_link:
-          Value: false
+          Value: true
       Marker Alpha: 1
       Marker Scale: 0.25
       Name: TF
       Show Arrows: true
       Show Axes: true
-      Show Names: true
+      Show Names: false
       Tree:
         base_link:
           braccio_base_link:
@@ -187,7 +186,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.5603360533714294
+      Distance: 0.8412135243415833
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -195,17 +194,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.02325478009879589
-        Y: 0.016717927530407906
-        Z: 0.0786040872335434
+        X: -0.09147170186042786
+        Y: 0.027509281411767006
+        Z: 0.23530039191246033
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.37520021200180054
+      Pitch: 0.3702000677585602
       Target Frame: <Fixed Frame>
-      Yaw: 0.3550848960876465
+      Yaw: 0.18508414924144745
     Saved: ~
 Window Geometry:
   Displays:

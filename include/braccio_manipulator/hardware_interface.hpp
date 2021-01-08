@@ -3,14 +3,21 @@
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
+
 #include <joint_limits_interface/joint_limits_interface.h>
 #include <joint_limits_interface/joint_limits.h>
 #include <joint_limits_interface/joint_limits_urdf.h>
 #include <joint_limits_interface/joint_limits_rosparam.h>
+
 #include <controller_manager/controller_manager.h>
+
 #include <boost/scoped_ptr.hpp>
+
 #include <ros/ros.h>
 #include <angles/angles.h>
+
+#include <std_msgs/UInt16MultiArray.h>
+#include <sensor_msgs/JointState.h>
 
 
 namespace HardwareInterface
@@ -30,6 +37,16 @@ public:
 	 * Destructor.
 	 */
     ~RobotHardwareInterface();
+
+    ros::Publisher cmd_pub;
+    ros::Subscriber jt_st_sub;
+
+    float jt_states[6];
+    std_msgs::UInt16MultiArray jt_cmds;
+
+    float M_5_PI_12;
+    float high_limit_joint_5;
+    float low_limit_joint_6; 
     
     /*!
      * Functions of the class
@@ -39,6 +56,11 @@ public:
     void update(const ros::TimerEvent& e); // The update function has to be a timed event
     void read();
     void write(ros::Duration elapsed_time); // The write function needs to have the elapsed time
+
+    /*!
+     * Callback functions 
+    */
+    void Joint_state_CB(const sensor_msgs::JointState joint_state);
 
 protected:
 

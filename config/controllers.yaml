@@ -1,0 +1,31 @@
+braccio_controllers:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+  
+  # Position Controllers ---------------------------------------
+  base_controller:
+    type: position_controllers/JointPositionController
+    joint: base_joint
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  shoulder_controller:
+    type: position_controllers/JointPositionController
+    joint: shoulder_joint
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  elbow_controller:
+    type: position_controllers/JointPositionController
+    joint: elbow_joint
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  wrist_pitch_controller:
+    type: position_controllers/JointPositionController
+    joint: wrist_pitch_joint
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  wrist_roll_controller:
+    type: position_controllers/JointPositionController
+    joint: wrist_roll_joint
+    pid: {p: 1.0, i: 0.0, d: 0.0}
+  gripper_controller:
+    type: position_controllers/JointPositionController
+    joint: gripper_joint
+    pid: {p: 1.0, i: 0.0, d: 0.0}

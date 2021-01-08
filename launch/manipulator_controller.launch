@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- Load Controllers -->
+    <rosparam file="$(find braccio_manipulator)/config/controllers.yaml" command="load"/>
+
+    <!-- Load limits -->
+    <rosparam file="$(find braccio_manipulator)/config/joint_limits.yaml" command="load"/>
+    
+    <!-- Load URDF Model-->
+    <arg name="robot_xacro" value="$(find braccio_manipulator)/urdf/braccio_arm.urdf"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg robot_xacro)"/>
+
+    <!-- Robot state publisher-->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    
+    <!-- Load and spawn controller -->
+    <node name="robot_hardware_interface" pkg="braccio_manipulator" type="braccio_hardware_interface_node" output="screen"/>
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+            args="  /braccio_controllers/joint_state_controller
+                    /braccio_controllers/base_controller
+                    /braccio_controllers/shoulder_controller
+                    /braccio_controllers/elbow_controller
+                    /braccio_controllers/wrist_pitch_controller
+                    /braccio_controllers/wrist_roll_controller
+                    /braccio_controllers/gripper_controller"
+    />
+
+    <!-- RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find braccio_manipulator)/rviz/urdf.rviz"/>
+    
+    
+</launch>
