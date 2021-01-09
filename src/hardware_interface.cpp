@@ -38,7 +38,7 @@ RobotHardwareInterface::RobotHardwareInterface(ros::NodeHandle& nh):
     jt_st_sub = nh_.subscribe("/braccio_states", 10, &RobotHardwareInterface::Joint_state_CB, this);
 
     // Publish loop frequency in ROS parameter server
-    nh_.param("/ROBOT/hardware_interface/loop_hz", loop_hz_, 30.0);
+    nh_.param("/braccio_manipulator/hardware_interface/loop_hz", loop_hz_, 15.0);
     ros::Duration update_freq = ros::Duration(1.0/loop_hz_);
     
     // Create a timer to call the update function periodically
@@ -56,8 +56,10 @@ RobotHardwareInterface::~RobotHardwareInterface()
 void RobotHardwareInterface::init(){
 
     // Load URDF model
-    boost::shared_ptr<urdf::ModelInterface> urdf;
+    urdf::Model urdf_model;
+    if (!urdf_model.initParam("robot_description")) return;
 
+    // Declare number of joints
     num_joints_=6;
 
     // Define the name of the joints
@@ -75,32 +77,34 @@ void RobotHardwareInterface::init(){
     for (int i = 0; i < num_joints_; ++i) {
 
         // Create joint state interface
-        hardware_interface::JointStateHandle jointStateHandle(joint_names_[i], &joint_position_[i], &joint_velocity_[i], &joint_effort_[i]);
-        joint_state_interface_.registerHandle(jointStateHandle);
+        hardware_interface::JointStateHandle jointStateHandle(joint_names_[i], &joint_position_[i], &joint_velocity_[i], &joint_effort_[i]);        
 
         // Create position joint interface
         hardware_interface::JointHandle jointPositionHandle(jointStateHandle, &joint_position_command_[i]);
-        position_joint_interface_.registerHandle(jointPositionHandle);
 
         //--- Create limits
-        //joint_limits_interface::JointLimits limits;
-        //joint_limits_interface::SoftJointLimits soft_limits;
+        joint_limits_interface::JointLimits limits;
+        joint_limits_interface::SoftJointLimits soft_limits;
 
         //--- Populate (soft) joint limits from URDF
         //--- Limits specified in URDF overwrite existing values in 'limits' and 'soft_limits'
         //--- Limits not specified in URDF preserve their existing values
-        //boost::shared_ptr<const urdf::Joint> urdf_joint = urdf->getJoint(joint_names_[i]);
-        //const bool urdf_limits_ok = getJointLimits(urdf_joint, limits);
-        //const bool urdf_soft_limits_ok = getSoftJointLimits(urdf_joint, soft_limits);
+        urdf::JointConstSharedPtr urdf_joint = urdf_model.getJoint(joint_names_[i]);
+        bool urdf_limits_ok = getJointLimits(urdf_joint, limits);
+        bool urdf_soft_limits_ok = getSoftJointLimits(urdf_joint, soft_limits);
 
         //--- Populate (soft) joint limits from the ros parameter server
         //--- Limits specified in the parameter server overwrite existing values in 'limits' and 'soft_limits'
         //--- Limits not specified in the parameter server preserve their existing values
         //const bool rosparam_limits_ok = getJointLimits(joint_names_[i], nh_, limits);
 
-        //--- Register handle in joint limits interface
-        //joint_limits_interface::PositionJointSoftLimitsHandle jointLimitsHandle(jointPositionHandle, limits, soft_limits);  // Soft limits spec
-        //positionJointSoftLimitsInterface.registerHandle(jointLimitsHandle);
+        //--- Create handle in joint limits interface
+        joint_limits_interface::PositionJointSoftLimitsHandle jointLimitsHandle(jointPositionHandle, limits, soft_limits);  // Soft limits spec
+        
+        //--- Register handles
+        joint_state_interface_.registerHandle(jointStateHandle);
+        positionJointSoftLimitsInterface.registerHandle(jointLimitsHandle);
+        position_joint_interface_.registerHandle(jointPositionHandle);
     }
 
     registerInterface(&joint_state_interface_);

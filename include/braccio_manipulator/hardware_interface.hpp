@@ -15,6 +15,9 @@
 
 #include <ros/ros.h>
 #include <angles/angles.h>
+#include <urdf_parser/urdf_parser.h>
+#include <urdf_model/model.h>
+#include <urdf/model.h>
 
 #include <std_msgs/UInt16MultiArray.h>
 #include <sensor_msgs/JointState.h>

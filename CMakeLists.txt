@@ -18,6 +18,8 @@ find_package(catkin REQUIRED COMPONENTS
   trajectory_msgs
   visualization_msgs
   message_generation
+  urdf
+  urdf_parser_plugin
 )
 
 ################################################
@@ -71,6 +73,8 @@ catkin_package(
     trajectory_msgs
     visualization_msgs
     message_generation
+    urdf
+    urdf_parser_plugin
 #  DEPENDS system_lib
 )
 
