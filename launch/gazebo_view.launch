@@ -70,7 +70,6 @@
         output="screen"
         args="  /braccio_controllers/joint_state_controller
                 /braccio_controllers/gripper_controller
-                /braccio_controllers/gripper_sub_controller
                 /braccio_controllers/arm_controller"
     />
     
