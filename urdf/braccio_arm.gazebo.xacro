@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<robot name="braccio_manipulator_gazebo" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="base_link">
+        <material>Gazebo/Orange</material>
+        <static>True</static>
+    </gazebo>
+
+    <gazebo reference="braccio_base_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+    <gazebo reference="shoulder_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+    <gazebo reference="elbow_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+    <gazebo reference="wrist_pitch_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+    <gazebo reference="wrist_roll_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="left_gripper_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <gazebo reference="right_gripper_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+</robot>

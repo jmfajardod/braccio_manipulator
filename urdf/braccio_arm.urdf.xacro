@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+
+<robot name="braccio_manipulator" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- XACRO args-->
+    <xacro:arg name="load_gazebo" default="false"/>
+
+    <!-- Definition of materials -->
+    <material name="orange">
+        <color rgba="0.57 0.17 0.0 1" />
+    </material>
+    <material name="white">
+        <color rgba="0.8 0.8 0.8 1.0" />
+    </material>
+    <material name="black">
+        <color rgba="0 0 0 0.50" />
+    </material>
+
+    <link name="world"/>
+
+    <joint name="fixed" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    </joint>
+    
+
+
+    <!--  Fixed Link -->
+    <link name="base_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <cylinder length="0.01" radius=".053" />
+            </geometry>
+            <material name="black" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <cylinder length="0.01" radius=".053" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!--  Base Joint-->
+    <joint name="base_joint" type="revolute">
+        <axis xyz="0 0 -1" />
+        <limit effort="1000.0" lower="$(eval -pi/2)" upper="$(eval pi/2)" velocity="10.0" />
+        <origin xyz="0 0 0" rpy="0 0 0"  />
+        <parent link="base_link" />
+        <child link="braccio_base_link" />
+    </joint>
+
+    <link name="braccio_base_link">
+        <visual>
+            <origin rpy="0 0 $(eval -pi)" xyz="0 0.004 0" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_base.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="orange" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 $(eval -pi)" xyz="0 0.004 0" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_base.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 0 $(eval -pi)" xyz="0 0.004 0" />
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!-- Shoulder Joint -->
+    <joint name="shoulder_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="1000.0" lower="$(eval -5*pi/12)" upper="$(eval 5*pi/12)" velocity="10.0" />
+        <origin rpy="0 0 0" xyz="0 -0.002 0.072" />
+        <parent link="braccio_base_link" />
+        <child link="shoulder_link" />
+    </joint>
+
+    <link name="shoulder_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="-0.0045 0.0055 -0.026" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_shoulder.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="orange" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="-0.0045 0.0055 -0.026" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_shoulder.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 0 0" xyz="-0.0045 0.0055 -0.026" />
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!-- Elbow Joint -->
+    <joint name="elbow_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="1000.0" lower="$(eval -pi/2)" upper="$(eval pi/2)" velocity="10.0" />
+        <origin rpy="0 0 0" xyz="0 0 0.125" />
+        <parent link="shoulder_link" />
+        <child link="elbow_link" />
+    </joint>
+
+    <link name="elbow_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="-0.0045 0.005 -0.025" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_elbow.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="orange" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="-0.0045 0.005 -0.025" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_elbow.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 0 0" xyz="-0.0045 0.005 -0.025" />
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!-- 4 Joint-->
+    <joint name="wrist_pitch_joint" type="revolute">
+        <axis xyz="1 0 0" />
+        <limit effort="1000.0" lower="$(eval -pi/2)" upper="$(eval pi/2)" velocity="10.0" />
+        <origin rpy="0 0 0" xyz="0 0 0.125" />
+        <parent link="elbow_link" />
+        <child link="wrist_pitch_link" />
+    </joint>
+
+    <link name="wrist_pitch_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.003 -0.0004 -0.024" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_wrist_pitch.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="orange" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.003 -0.0004 -0.024" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_wrist_pitch.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!-- 5 Joint -->
+    <joint name="wrist_roll_joint" type="revolute">
+        <axis xyz="0 0 -1" />
+        <limit effort="1000.0" lower="$(eval -pi/2)" upper="$(eval 35*pi/180)" velocity="10.0" />
+        <origin rpy="0 0 $(eval -pi/2)" xyz="0 0.0 0.06" />
+        <parent link="wrist_pitch_link" />
+        <child link="wrist_roll_link" />
+    </joint>
+
+    <link name="wrist_roll_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.006 0 0.0" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_wrist_roll.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.006 0 0.0" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_wrist_roll.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.006 0 0.0" />
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!--  Gripper Joints-->
+    <joint name="gripper_joint" type="revolute">
+        <axis xyz="0 -1 0" />
+        <limit effort="1000.0" lower="1.217" upper="1.5708" velocity="1.0" />
+        <origin rpy="0 0 0" xyz="0.010 0 0.03" />
+        <parent link="wrist_roll_link" />
+        <child link="right_gripper_link" />
+    </joint>
+
+    <joint name="sub_gripper_joint" type="revolute">
+        <axis xyz="0 1 0" />
+        <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="1.0" />
+        <origin rpy="0 $(eval 7*pi/5) 0" xyz="-0.010 0 0.03" />
+        <parent link="wrist_roll_link" />
+        <child link="left_gripper_link" />
+        <xacro:unless value="$(arg load_gazebo)">
+            <mimic joint="gripper_joint" />
+        </xacro:unless>
+    </joint>
+
+    <link name="left_gripper_link">
+        <visual><origin rpy="0 1.5708 0" xyz="0 -0.012 0" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_left_gripper.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        <collision>
+            <origin rpy="0 1.5708 0" xyz="0 -0.012 0" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_left_gripper.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 1.5708 0" xyz="0 -0.012 0" />
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <link name="right_gripper_link">
+        <visual>
+            <origin rpy="0 1.5708 0" xyz="0 -0.012 0.010" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_right_gripper.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+            <material name="white" />
+        </visual>
+        <collision>
+            <origin rpy="0 1.5708 0" xyz="0 -0.012 0.010" />
+            <geometry>
+                <mesh filename="package://braccio_manipulator/stl/braccio_right_gripper.stl" scale="0.001 0.001 0.001" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 1.5708 0" xyz="0 -0.012 0.010" />
+            <mass value="0.1"/>
+            <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <!-- ############################################################################################# -->
+    <!-- ############################################################################################# -->
+    <!-- ############################################################################################# -->
+    <!-- Include Gazebo -->
+    <xacro:if value="$(arg load_gazebo)">
+        <xacro:include filename="$(find braccio_manipulator)/urdf/braccio_arm.gazebo.xacro" />
+        <xacro:include filename="$(find braccio_manipulator)/urdf/braccio_arm.transmission.xacro" />
+    </xacro:if>
+
+</robot>

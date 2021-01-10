@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 
-<robot name="visual">
+<robot name="braccio_manipulator" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- XACRO args-->
+    <xacro:arg name="load_gazebo" default="false"/>
 
     <!-- Definition of materials -->
     <material name="orange">
@@ -157,7 +160,6 @@
             <origin rpy="0 1.5708 0" xyz="0 -0.012 0.010" />
         </visual>
     </link>
-
 
 
 </robot>

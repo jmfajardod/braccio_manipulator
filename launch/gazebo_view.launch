@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- Arg to change robot name and be able to spawn multiple robots-->
+    <arg name="use_gazebo" default="true"/>
+
+    <!-- Load the urdf into the parameter server. -->
+    <arg name="robot_xacro" value="$(find braccio_manipulator)/urdf/braccio_arm.urdf.xacro
+                                    load_gazebo:=$(arg use_gazebo)"/>
+
+    <param name="robot_description"  command="$(find xacro)/xacro $(arg robot_xacro)" />
+
+    <!-- ************************************************************************************************ -->
+    <!-- ************************************************************************************************ -->
+    <!-- Create the Robot State Publisher -->
+    <node 
+        pkg="robot_state_publisher" 
+        type="robot_state_publisher" 
+        name="rob_st_pub"
+    />
+    
+    <!-- RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find braccio_manipulator)/rviz/urdf.rviz"/>
+
+    <!-- ************************************************************************************************ -->
+    <!-- ************************************************************************************************ -->
+    <!-- Spawn Model in Gazebo-->
+    
+    <!-- Launch Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="worlds/empty.world"/> 
+        <arg name="use_sim_time" value="true"/>
+        <arg name="debug" value="false"/>
+        <arg name="paused" value="false"/>
+        <arg name="recording" value="false"/>
+    </include>
+
+    <!-- Robot initial pose -->
+    <arg name="x" default="0.0"/>
+    <arg name="y" default="0.0"/>
+    <arg name="z" default="0.01"/>
+    <arg name="roll" default="0.0"/>
+    <arg name="pitch" default="0.0"/>
+    <arg name="yaw" default="$(eval 0.0 * 3.141592 / 180.0)"/>
+
+    <node 
+        pkg="gazebo_ros" 
+        type="spawn_model" 
+        name="spawn_braccio"  
+        respawn="false"
+        args="-x $(arg x) -y $(arg y) -z $(arg z)
+            -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)
+            -urdf 
+            -param robot_description
+            -model braccio"
+    />
+
+    <!-- ************************************************************************************************ -->
+    <!-- ************************************************************************************************ -->
+    <!-- Create controller manager -->
+    
+    <!-- Load Controllers -->
+    <rosparam file="$(find braccio_manipulator)/config/simulator_controller.yaml" command="load"/>
+    
+    <node 
+        name="controller_spawner" 
+        pkg="controller_manager" 
+        type="spawner" 
+        respawn="false" 
+        output="screen"
+        args="  /braccio_controllers/joint_state_controller
+                /braccio_controllers/gripper_controller
+                /braccio_controllers/gripper_sub_controller
+                /braccio_controllers/arm_controller"
+    />
+    
+    
+</launch>

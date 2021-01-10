@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot name="braccio_manipulator_transmissions" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Base Tranmission -->
+    <transmission name="trans_base">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="base_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <!-- Shoulder Tranmission -->
+    <transmission name="trans_shoulder">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="shoulder_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="shoulder_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <!-- Elbow Tranmission -->
+    <transmission name="trans_elbow">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="elbow_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="elbow_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <!-- Wrist pitch Tranmission -->
+    <transmission name="trans_wrist_pitch">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="wrist_pitch_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="wrist_pitch_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <!-- Wrist roll Tranmission -->
+    <transmission name="trans_wrist_roll">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="wrist_roll_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="wrist_roll_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <!-- Gripper Tranmission -->
+    <transmission name="trans_gripper">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="gripper_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="gripper_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <transmission name="trans_sub_gripper">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="sub_gripper_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="sub_gripper_motor">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+
+</robot>
