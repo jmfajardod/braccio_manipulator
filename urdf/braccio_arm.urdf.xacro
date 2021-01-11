@@ -196,6 +196,15 @@
         </inertial>
     </link>
 
+    <joint name="end_effector_joint" type="fixed">
+        <parent link="wrist_roll_link"/>
+        <child link="end_effector_link"/>
+        <origin xyz="0.0 0.0 0.08" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <link name="end_effector_link" />
+    
+
     <!--  Gripper Joints-->
     <joint name="gripper_joint" type="revolute">
         <axis xyz="0 -1 0" />
@@ -208,12 +217,17 @@
     <joint name="sub_gripper_joint" type="revolute">
         <axis xyz="0 1 0" />
         <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="1.0" />
-        <origin rpy="0 $(eval 7*pi/5) 0" xyz="-0.010 0 0.03" />
         <parent link="wrist_roll_link" />
         <child link="left_gripper_link" />
         <xacro:unless value="$(arg load_gazebo)">
             <mimic joint="gripper_joint" />
+            <limit effort="1000.0" lower="1.5708" upper="2.7876" velocity="1.0" />
+            <origin rpy="0 3.1416 0" xyz="-0.010 0 0.03" />
         </xacro:unless>
+        <xacro:if value="$(arg load_gazebo)">
+            <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="1.0" />
+            <origin rpy="0 $(eval 7*pi/5) 0" xyz="-0.010 0 0.03" />
+        </xacro:if>
     </joint>
 
     <link name="left_gripper_link">

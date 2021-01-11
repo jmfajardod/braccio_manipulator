@@ -2,7 +2,7 @@
 <launch>
 
     <!-- Load path to model -->
-    <arg name="robot_xacro" value="$(find braccio_manipulator)/urdf/braccio_arm.urdf"/>
+    <arg name="robot_xacro" value="$(find braccio_manipulator)/urdf/braccio_arm.urdf.xacro"/>
 
     <param name="robot_description" command="$(find xacro)/xacro $(arg robot_xacro)"/>
 
